@@ -1,0 +1,31 @@
+diff --git a/fvm/errors/errors.go b/fvm/errors/errors.go
+index 80aa85641d..cca7a74cbe 100644
+--- a/fvm/errors/errors.go
++++ b/fvm/errors/errors.go
+@@ -4,7 +4,6 @@ import (
+ 	stdErrors "errors"
+ 
+ 	"github.com/onflow/cadence/runtime"
+-	"github.com/onflow/cadence/runtime/errors"
+ )
+ 
+ // Error covers all non-fatal errors happening
+@@ -72,18 +71,6 @@ func HandleRuntimeError(err error) error {
+ 		return NewUnknownFailure(runErr)
+ 	}
+ 
+-	// External errors are reported by the runtime but originate from the VM.
+-	// External errors may be fatal or non-fatal, so additional handling by SplitErrorTypes
+-	if externalErr, ok := errors.GetExternalError(err); ok {
+-		if recoveredErr, ok := externalErr.Recovered.(error); ok {
+-			// If the recovered value is an error, pass it to the original
+-			// error handler to distinguish between fatal and non-fatal errors.
+-			return recoveredErr
+-		}
+-		// if not recovered return
+-		return NewUnknownFailure(externalErr)
+-	}
+-
+ 	// All other errors are non-fatal Cadence errors.
+ 	return NewCadenceRuntimeError(&runErr)
+ }

@@ -5,7 +5,6 @@ go 1.18
 replace github.com/onflow/flow-go => ../upstream/flow-go
 
 require (
-	github.com/onflow/cadence v0.24.7
 	github.com/onflow/flow-dps v1.3.4-0.20220701194418-1402fe1412ca
 	github.com/onflow/flow-go v0.26.12
 	github.com/rs/zerolog v1.26.1
@@ -65,6 +64,7 @@ require (
 	github.com/multiformats/go-multihash v0.1.0 // indirect
 	github.com/multiformats/go-varint v0.0.6 // indirect
 	github.com/onflow/atree v0.4.0 // indirect
+	github.com/onflow/cadence v0.24.7 // indirect
 	github.com/onflow/flow-go-sdk v0.26.5-0.20220629191626-900f9f91bffc // indirect
 	github.com/onflow/flow-go/crypto v0.24.4 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
