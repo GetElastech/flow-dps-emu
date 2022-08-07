@@ -39,6 +39,6 @@ upstream:
 
 # Clean all unused images and containers
 clean: backend-stop
-	rm -rf upstream/
 	docker system prune -a -f
+	rm -rf upstream/
 
