@@ -48,9 +48,9 @@ CMD /bin/bash
 FROM build-env as production
 
 WORKDIR /app/src
-COPY --from=build-env /app/main /app/main
+COPY --from=build-env /app/main /app/flow-dps-emu
 
-CMD ["go", "run", "-tags=relic", "cmd/flow-dps-emu/main.go"]
+CMD ["/app/flow-dps-emu"]
 
 ## (6) Add the statically linked binary to a distroless image
 FROM golang:1.18 as production-small
@@ -58,46 +58,6 @@ FROM golang:1.18 as production-small
 RUN rm -rf /go
 RUN rm -rf /app
 RUN rm -rf /usr/local/go
-COPY --from=production /app/main /bin/main
+COPY --from=production /app/flow-dps-emu /bin/flow-dps-emu
 
 CMD ["/bin/main"]
-
-FROM golang:1.18 as build-cli-env
-
-RUN git clone https://github.com/onflow/flow-cli.git /flow-cli
-WORKDIR /flow-cli
-
-# FIX: Let's stick to v0.34.0 to make sure we are backward compatible with legacy clients end to end.
-RUN git checkout 6c240a76ec2bb5d5685afeb0898eed0ea1bd0059
-RUN go mod download
-# FIX: make sure no further steps update modules later, so that we can debug regressions
-RUN go mod vendor
-
-FROM build-cli-env as build-cli
-
-WORKDIR /flow-cli
-# FIX: Let's not gamble and stick to v0.34.0. Backward compatibility can be checked this way.
-# FIX: See git checkout in build-cli-env
-RUN VERSION=v0.34.0 \
-	go build \
-	-trimpath \
-	-ldflags \
-	"-X github.com/onflow/flow-cli/build.commit=6c240a76ec2bb5d5685afeb0898eed0ea1bd0059 -X github.com/onflow/flow-cli/build.semver=v0.34.0" \
-	./cmd/flow/main.go
-
-RUN ./main version
-
-FROM golang:1.18 as flow-cli
-
-RUN rm -rf /go
-RUN rm -rf /app
-RUN rm -rf /usr/local/go
-COPY --from=build-cli /flow-cli/main /bin/flow
-
-CMD ["/bin/bash"]
-
-FROM flow-cli as flow-e2e-test
-
-COPY ./resources/flow-localnet.json /root/flow-localnet.json
-WORKDIR /root
-CMD flow -f /root/flow-localnet.json -n flow_api blocks get latest

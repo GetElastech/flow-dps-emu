@@ -8,11 +8,12 @@ test:
 
 # Build production Docker containers
 build: upstream
-	docker build -t onflow.org/flow-dps-emu --target build-env .
+	docker build -t onflow.org/flow-dps-emu-dev --target build-env .
+	docker build -t onflow.org/flow-dps-emu --target production .
 
 # Run DPS emulator service in Docker
 run: build
-	docker run -t -i --name flow_dps_emu --rm -p 4900:9000 onflow.org/flow-dps-emu .
+	docker run -t -i --name flow_dps_emu --rm -p 4900:9000 onflow.org/flow-dps-emu
 
 # Run API service attached to Flow localnet network in Docker
 backend: backend-start backend-stop

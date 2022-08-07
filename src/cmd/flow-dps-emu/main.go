@@ -65,7 +65,7 @@ func main() {
 		Component("RPC Listening", func(node *srv.ServiceConfig) error {
 			// wait until started
 			<-serviceBuilder.RpcEngine.Ready()
-			serviceBuilder.ServiceConfig.Logger.Info().Msg("Flow API Service Ready")
+			serviceBuilder.ServiceConfig.Logger.Info().Msg("Flow DPS Live Emulator Service Ready")
 			return nil
 		})
 
