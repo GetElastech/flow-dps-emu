@@ -38,7 +38,7 @@ upstream:
 	bash -c 'cd upstream/flow-go && make install-tools'
 
 # Clean all unused images and containers
-clean:
+clean: backend-stop
 	rm -rf upstream/
 	docker system prune -a -f
 

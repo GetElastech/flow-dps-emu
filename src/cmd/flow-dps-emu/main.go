@@ -43,7 +43,7 @@ func main() {
 			for _, id := range dps {
 				serviceBuilder.ServiceConfig.Logger.Info().Str("Upstream dps", id.Address).Msg("DPS API Service client")
 			}
-			serviceBuilder.Api = proxy.NewDPSService()
+			serviceBuilder.Api = proxy.NewDPSService(serviceBuilder.ServiceConfig.Logger)
 			if err != nil {
 				serviceBuilder.ServiceConfig.Logger.Info().Err(err)
 				return err
