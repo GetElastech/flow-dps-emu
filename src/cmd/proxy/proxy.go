@@ -19,7 +19,7 @@ import (
 func NewDPSService(logger zerolog.Logger) *DPSService {
 	// No public key means an insecure channel
 	clientRPCConnection, err := grpc.Dial(
-		"127.0.0.1:4500",
+		"access:9000",
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(grpcutils.DefaultMaxMsgSize)),
 		grpc.WithInsecure(), //nolint:staticcheck
 		backend.WithClientUnaryInterceptor(3*time.Second))
