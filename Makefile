@@ -19,7 +19,7 @@ backend: backend-start backend-stop
 
 # Stop localnet flow tests
 backend-stop:
-	bash -c 'cd upstream/flow-go/integration/localnet && make stop'
+	bash -c 'cd upstream/flow-go/integration/localnet; ! test -f ./docker-compose.nodes.yml || make stop'
 
 # Run a Flow network in localnet in Docker
 backend-start: upstream
