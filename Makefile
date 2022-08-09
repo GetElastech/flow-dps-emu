@@ -31,11 +31,11 @@ upstream:
 	mkdir -p upstream
 	# Install the latest flow
 	git clone https://github.com/onflow/flow-go.git upstream/flow-go || true
-	bash -c 'cd upstream/flow-go && git checkout v0.26.0'
+	# FIX: Use vendor instead of hard coding versions. bash -c 'cd upstream/flow-go && git checkout v0.26.0'
 	bash -c 'cd upstream/flow-go && git reset --hard'
 	# FIX: Temporary patch on current flow builds for DPS.
 	# FIX: We should add a CI test for DPS compatibility there.
-	bash -c 'cd upstream/flow-go && patch -p 1 <../../resources/buildfix'
+	bash -c 'cd upstream/flow-go && patch -p 1 <../../resources/buildfix.master'
 	bash -c 'cd upstream/flow-go && make install-tools'
 
 # Clean all unused images and containers
