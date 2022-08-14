@@ -2,11 +2,9 @@ package proxy
 
 import (
 	"context"
-	"fmt"
 	"github.com/onflow/flow-dps/api/dps"
 	"github.com/onflow/flow-dps/codec/zbor"
 	"github.com/onflow/flow-go/engine/access/rpc/backend"
-	"github.com/onflow/flow-go/model/flow"
 	"github.com/onflow/flow-go/utils/grpcutils"
 	"github.com/onflow/flow/protobuf/go/flow/access"
 	"github.com/rs/zerolog"
@@ -44,115 +42,26 @@ type DPSService struct {
 }
 
 func (d *DPSService) GetFirst(ctx context.Context, r *dps.GetFirstRequest) (*dps.GetFirstResponse, error) {
-	last, err := d.GetLast(ctx, &dps.GetLastRequest{})
-	if err != nil {
-		return nil, err
-	}
-	for height := uint64(0); height < last.GetHeight(); height++ {
-		res, err := d.client.GetBlockByHeight(ctx, &access.GetBlockByHeightRequest{
-			Height: height,
-		})
-		if err == nil && res.Block.Height == height {
-			return &dps.GetFirstResponse{
-				Height: height,
-			}, nil
-		}
-	}
-	return nil, status.Errorf(codes.NotFound, "starting height not found")
+	return nil, status.Errorf(codes.Unimplemented, "method not implemented")
 }
 
 func (d *DPSService) GetLast(ctx context.Context, req *dps.GetLastRequest) (*dps.GetLastResponse, error) {
-	res, err := d.client.GetLatestBlockHeader(ctx, &access.GetLatestBlockHeaderRequest{
-		IsSealed: true,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &dps.GetLastResponse{
-		Height: res.Block.Height,
-	}, nil
+	return nil, status.Errorf(codes.Unimplemented, "method not implemented")
 }
 
 func (d *DPSService) GetHeightForBlock(ctx context.Context, r *dps.GetHeightForBlockRequest) (*dps.GetHeightForBlockResponse, error) {
-	res, err := d.client.GetBlockByID(ctx, &access.GetBlockByIDRequest{
-		Id: r.BlockID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &dps.GetHeightForBlockResponse{
-		Height: res.Block.Height,
-	}, nil
+	return nil, status.Errorf(codes.Unimplemented, "method not implemented")
 }
 
 func (d *DPSService) GetCommit(ctx context.Context, r *dps.GetCommitRequest) (*dps.GetCommitResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCommit not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method not implemented")
 }
 
 func (d *DPSService) GetHeader(ctx context.Context, req *dps.GetHeaderRequest) (*dps.GetHeaderResponse, error) {
-	res, err := d.client.GetBlockHeaderByHeight(ctx, &access.GetBlockHeaderByHeightRequest{
-		Height: req.Height,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	hdr := flow.Header{
-		ChainID:            flow.ChainID(res.Block.ChainId),
-		ParentID:           flow.MustHexStringToIdentifier(string(res.Block.ParentId)),
-		Height:             res.Block.Height,
-		PayloadHash:        flow.MustHexStringToIdentifier(string(res.Block.PayloadHash)),
-		Timestamp:          (*res.Block.Timestamp).AsTime(),
-		View:               res.Block.View,
-		ParentVoterIndices: res.Block.ParentVoterIndices,
-		ParentVoterSigData: res.Block.ParentVoterSigData,
-		ProposerID:         flow.MustHexStringToIdentifier(string(res.Block.ProposerId)),
-		ProposerSigData:    res.Block.ProposerSigData,
-	}
-
-	b, err := d.codec.Marshal(hdr)
-	return &dps.GetHeaderResponse{
-		Data:   b,
-		Height: res.Block.Height,
-	}, nil
+	return nil, status.Errorf(codes.Unimplemented, "method not implemented")
 }
 func (d *DPSService) GetEvents(ctx context.Context, r *dps.GetEventsRequest) (*dps.GetEventsResponse, error) {
-	list := make([]flow.Event, 0)
-	for _, t := range r.GetTypes() {
-		res, err := d.client.GetEventsForHeightRange(ctx, &access.GetEventsForHeightRangeRequest{
-			StartHeight: r.Height,
-			EndHeight:   r.Height,
-			Type:        t,
-		})
-		if err != nil {
-			return nil, err
-		}
-		for _, r := range res.GetResults() {
-			for _, e := range r.Events {
-				a := flow.Event{
-					Type:             flow.EventType(e.Type),
-					TransactionIndex: e.TransactionIndex,
-					TransactionID:    flow.HashToID(e.TransactionId),
-					EventIndex:       e.EventIndex,
-					Payload:          e.Payload,
-				}
-				list = append(list, a)
-			}
-		}
-	}
-
-	data, err := d.codec.Marshal(list)
-	if err != nil {
-		return nil, fmt.Errorf("could not encode events: %w", err)
-	}
-
-	res := dps.GetEventsResponse{
-		Height: r.Height,
-		Types:  r.Types,
-		Data:   data,
-	}
-
-	return &res, nil
+	return nil, status.Errorf(codes.Unimplemented, "method not implemented")
 }
 func (DPSService) GetRegisterValues(context.Context, *dps.GetRegisterValuesRequest) (*dps.GetRegisterValuesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRegisterValues not implemented")
